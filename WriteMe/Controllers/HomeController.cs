@@ -18,27 +18,9 @@ namespace WriteMe.Controllers
         {
             _logger = logger;
         }
-
-        class MyClass
-        {
-            public string name { get; set; }
-            public string surname { get; set; }
-
-            public override string ToString() => $"Name = {name}, Surname = {surname}";
-        } 
-        class MyClass2
-        {
-            public string name { get; set; }
-            public string surname { get; set; }
-
-        }
-
+        
         public IActionResult Index()
         {
-            MyClass dima = new MyClass{name = "Dima", surname = "Senk"};
-            MyClass2 dima2 = new MyClass2{name = "Xyi", surname = "Dimoooon"};
-            _logger.Error(new Exception(),$"{dima} soset chlen {dima2} a", dima, dima2);
-
             return View();
         }
 
