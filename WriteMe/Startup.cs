@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace WriteMe
 {
@@ -28,10 +29,8 @@ namespace WriteMe
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.AddSeq("https://localhost:44381");
-            });
+           
+            services.AddSingleton(p=>LogManager.GetCurrentClassLogger());
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -62,6 +61,13 @@ namespace WriteMe
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.Use(async (context, next) =>
+            {
+                var logger = LogManager.GetCurrentClassLogger();
+                logger.Info("______________________________________________App is started______________________________________________");
+                await next();
+            });
 
             app.UseEndpoints(endpoints =>
             {
