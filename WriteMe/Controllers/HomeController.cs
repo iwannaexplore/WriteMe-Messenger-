@@ -20,6 +20,7 @@ namespace WriteMe.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("hi");
             return View();
         }
 
