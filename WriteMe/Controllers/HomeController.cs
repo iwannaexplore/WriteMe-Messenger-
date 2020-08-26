@@ -5,22 +5,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NLog;
 using WriteMe.Models;
 
 namespace WriteMe.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly Logger _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(Logger logger)
         {
             _logger = logger;
         }
-
+        
         public IActionResult Index()
         {
-            _logger.LogInformation("hi");
             return View();
         }
 
