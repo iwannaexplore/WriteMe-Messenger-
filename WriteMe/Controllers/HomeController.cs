@@ -12,20 +12,16 @@ namespace WriteMe.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Logger _logger;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public HomeController(Logger logger)
+        public HomeController()
         {
-            _logger = logger;
+
         }
         
         public IActionResult Index()
         {
-            return View();
-        }
 
-        public IActionResult Privacy()
-        {
             return View();
         }
 
