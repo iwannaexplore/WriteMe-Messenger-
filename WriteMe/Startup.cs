@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
+using WriteMe.Data.Entities;
 
 namespace WriteMe
 {
@@ -29,13 +30,13 @@ namespace WriteMe
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
-            services.AddSingleton(p=>LogManager.GetCurrentClassLogger());
+            services.AddSingleton(p => LogManager.GetCurrentClassLogger());
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI()
+                .AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -54,6 +55,7 @@ namespace WriteMe
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -65,7 +67,8 @@ namespace WriteMe
             app.Use(async (context, next) =>
             {
                 var logger = LogManager.GetCurrentClassLogger();
-                logger.Info("______________________________________________App is started______________________________________________");
+                logger.Info(
+                    "______________________________________________App is started______________________________________________");
                 await next();
             });
 
