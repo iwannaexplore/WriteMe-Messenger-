@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WriteMe.Migrations
+namespace WriteMe.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class GoogleAuth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,54 +20,6 @@ namespace WriteMe.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FriendsRelationship",
-                columns: table => new
-                {
-                    FriendsRelationshipId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FriendsRelationship", x => x.FriendsRelationshipId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Status",
-                columns: table => new
-                {
-                    StatusId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LastActivityTime = table.Column<DateTime>(nullable: false),
-                    IsOnline = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Status", x => x.StatusId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -90,19 +42,45 @@ namespace WriteMe.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Surname = table.Column<string>(nullable: true),
-                    StatusId = table.Column<int>(nullable: false),
+                    LastActivityTime = table.Column<DateTime>(nullable: false),
                     ProfilePicture = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FriendsRelationships",
+                columns: table => new
+                {
+                    FriendsRelationshipId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FriendsRelationships", x => x.FriendsRelationshipId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Status_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Status",
-                        principalColumn: "StatusId",
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -192,7 +170,7 @@ namespace WriteMe.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FriendsList",
+                name: "FriendsLists",
                 columns: table => new
                 {
                     FriendsListId = table.Column<int>(nullable: false)
@@ -204,27 +182,27 @@ namespace WriteMe.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FriendsList", x => x.FriendsListId);
+                    table.PrimaryKey("PK_FriendsLists", x => x.FriendsListId);
                     table.ForeignKey(
-                        name: "FK_FriendsList_FriendsRelationship_FriendsRelationshipId",
+                        name: "FK_FriendsLists_FriendsRelationships_FriendsRelationshipId",
                         column: x => x.FriendsRelationshipId,
-                        principalTable: "FriendsRelationship",
+                        principalTable: "FriendsRelationships",
                         principalColumn: "FriendsRelationshipId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_FriendsList_AspNetUsers_RelatedUserId",
+                        name: "FK_FriendsLists_AspNetUsers_RelatedUserId",
                         column: x => x.RelatedUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_FriendsList_AspNetUsers_RelatingUserId",
+                        name: "FK_FriendsLists_AspNetUsers_RelatingUserId",
                         column: x => x.RelatingUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chat",
+                name: "Chats",
                 columns: table => new
                 {
                     ChatId = table.Column<int>(nullable: false),
@@ -232,17 +210,17 @@ namespace WriteMe.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chat", x => x.ChatId);
+                    table.PrimaryKey("PK_Chats", x => x.ChatId);
                     table.ForeignKey(
-                        name: "FK_Chat_FriendsList_ChatId",
+                        name: "FK_Chats_FriendsLists_ChatId",
                         column: x => x.ChatId,
-                        principalTable: "FriendsList",
+                        principalTable: "FriendsLists",
                         principalColumn: "FriendsListId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Message",
+                name: "Messages",
                 columns: table => new
                 {
                     MessageId = table.Column<int>(nullable: false)
@@ -253,11 +231,11 @@ namespace WriteMe.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Message", x => x.MessageId);
+                    table.PrimaryKey("PK_Messages", x => x.MessageId);
                     table.ForeignKey(
-                        name: "FK_Message_Chat_ChatId",
+                        name: "FK_Messages_Chats_ChatId",
                         column: x => x.ChatId,
-                        principalTable: "Chat",
+                        principalTable: "Chats",
                         principalColumn: "ChatId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -302,28 +280,23 @@ namespace WriteMe.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_StatusId",
-                table: "AspNetUsers",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FriendsList_FriendsRelationshipId",
-                table: "FriendsList",
+                name: "IX_FriendsLists_FriendsRelationshipId",
+                table: "FriendsLists",
                 column: "FriendsRelationshipId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsList_RelatedUserId",
-                table: "FriendsList",
+                name: "IX_FriendsLists_RelatedUserId",
+                table: "FriendsLists",
                 column: "RelatedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsList_RelatingUserId",
-                table: "FriendsList",
+                name: "IX_FriendsLists_RelatingUserId",
+                table: "FriendsLists",
                 column: "RelatingUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_ChatId",
-                table: "Message",
+                name: "IX_Messages_ChatId",
+                table: "Messages",
                 column: "ChatId");
         }
 
@@ -345,25 +318,22 @@ namespace WriteMe.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Message");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Chat");
+                name: "Chats");
 
             migrationBuilder.DropTable(
-                name: "FriendsList");
+                name: "FriendsLists");
 
             migrationBuilder.DropTable(
-                name: "FriendsRelationship");
+                name: "FriendsRelationships");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Status");
         }
     }
 }

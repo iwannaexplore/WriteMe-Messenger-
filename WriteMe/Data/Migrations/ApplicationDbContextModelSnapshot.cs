@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WriteMe.Data;
 
-namespace WriteMe.Migrations
+namespace WriteMe.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -163,7 +163,7 @@ namespace WriteMe.Migrations
 
                     b.HasKey("ChatId");
 
-                    b.ToTable("Chat");
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("WriteMe.Data.Entities.FriendsList", b =>
@@ -193,7 +193,7 @@ namespace WriteMe.Migrations
 
                     b.HasIndex("RelatingUserId");
 
-                    b.ToTable("FriendsList");
+                    b.ToTable("FriendsLists");
                 });
 
             modelBuilder.Entity("WriteMe.Data.Entities.FriendsRelationship", b =>
@@ -208,7 +208,7 @@ namespace WriteMe.Migrations
 
                     b.HasKey("FriendsRelationshipId");
 
-                    b.ToTable("FriendsRelationship");
+                    b.ToTable("FriendsRelationships");
                 });
 
             modelBuilder.Entity("WriteMe.Data.Entities.Message", b =>
@@ -231,25 +231,7 @@ namespace WriteMe.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Message");
-                });
-
-            modelBuilder.Entity("WriteMe.Data.Entities.Status", b =>
-                {
-                    b.Property<int>("StatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsOnline")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastActivityTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("StatusId");
-
-                    b.ToTable("Status");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("WriteMe.Data.Entities.User", b =>
@@ -273,14 +255,14 @@ namespace WriteMe.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("LastActivityTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
@@ -305,12 +287,6 @@ namespace WriteMe.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -327,8 +303,6 @@ namespace WriteMe.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -417,15 +391,6 @@ namespace WriteMe.Migrations
                     b.HasOne("WriteMe.Data.Entities.Chat", "Chat")
                         .WithMany("Messages")
                         .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WriteMe.Data.Entities.User", b =>
-                {
-                    b.HasOne("WriteMe.Data.Entities.Status", "Status")
-                        .WithMany("Users")
-                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

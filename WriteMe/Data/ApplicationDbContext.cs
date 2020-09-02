@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WriteMe.Data.Entities;
@@ -20,8 +21,6 @@ namespace WriteMe.Data
 
         public DbSet<Message> Messages { get; set; }
 
-        public DbSet<Status> Statuses { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -41,6 +40,7 @@ namespace WriteMe.Data
                 .HasOne(a => a.Chat)
                 .WithOne(b => b.FriendsList)
                 .HasForeignKey<Chat>(b => b.ChatId);
+
         }
     }
 }
