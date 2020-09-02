@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WriteMe.Data.Entities;
+using WriteMe.Data.Extensions;
 
 namespace WriteMe.Data
 {
@@ -11,6 +12,7 @@ namespace WriteMe.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<Chat> Chats { get; set; }
@@ -24,23 +26,13 @@ namespace WriteMe.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<FriendsList>()
-                .HasOne(m => m.RelatingUser)
-                .WithMany(t => t.RelatingFriendsLists)
-                .HasForeignKey(m => m.RelatingUserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<FriendsList>()
-                .HasOne(m => m.RelatedUser)
-                .WithMany(t => t.RelatedFriendsLists)
-                .HasForeignKey(m => m.RelatedUserId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<FriendsList>()
                 .HasOne(a => a.Chat)
                 .WithOne(b => b.FriendsList)
                 .HasForeignKey<Chat>(b => b.ChatId);
 
+            modelBuilder.Seed();
         }
     }
 }

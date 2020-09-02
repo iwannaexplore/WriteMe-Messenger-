@@ -13,5 +13,9 @@ namespace WriteMe.Data.Entities
         public Chat Chat { get; set; }
 
         public int ChatId { get; set; }
+
+        public int RelatingUserId { get; set; }
+
+        public User RelatingUser { get; set; }
     }
 }
