@@ -17,5 +17,9 @@ namespace WriteMe.Data.Entities
         public int RelatingUserId { get; set; }
 
         public User RelatingUser { get; set; }
+
+        public int RelatedUserId { get; set; }
+
+        public User RelatedUser { get; set; }
     }
 }

@@ -16,9 +16,8 @@ namespace WriteMe.Data
         }
 
         public DbSet<Chat> Chats { get; set; }
-
-        public DbSet<FriendsList> FriendsLists { get; set; }
-
+        public DbSet<FriendList> FriendLists{ get; set; }
+        
         public DbSet<FriendsRelationship> FriendsRelationships { get; set; }
 
         public DbSet<Message> Messages { get; set; }
@@ -27,10 +26,28 @@ namespace WriteMe.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<FriendsList>()
-                .HasOne(a => a.Chat)
-                .WithOne(b => b.FriendsList)
-                .HasForeignKey<Chat>(b => b.ChatId);
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.RelatingUser)
+                .WithMany(t => t.RelatingMessages)
+                .HasForeignKey(m => m.RelatingUserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.RelatedUser)
+                .WithMany(t => t.RelatedMessage)
+                .HasForeignKey(m => m.RelatedUserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FriendListUser>()
+                .HasKey(bc => new { bc.FriendListId, bc.UserId });
+            modelBuilder.Entity<FriendListUser>()
+                .HasOne(bc => bc.FriendList)
+                .WithMany(b => b.FriendListUsers)
+                .HasForeignKey(bc => bc.FriendListId);
+            modelBuilder.Entity<FriendListUser>()
+                .HasOne(bc => bc.User)
+                .WithMany(c => c.FriendListUsers)
+                .HasForeignKey(bc => bc.UserId);
 
             modelBuilder.Seed();
         }

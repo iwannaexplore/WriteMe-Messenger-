@@ -10,8 +10,10 @@ namespace WriteMe.Data.Entities
 
         public string ProfilePicture { get; set; }
 
-        public ICollection<FriendsList> FriendsLists { get; set; }
-
         public ICollection<Message> RelatingMessages { get; set; }
+
+        public ICollection<Message> RelatedMessage { get; set; }
+
+        public ICollection<FriendListUser> FriendListUsers { get; set; }
     }
 }
