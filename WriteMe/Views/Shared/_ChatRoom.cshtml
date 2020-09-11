@@ -1,0 +1,52 @@
+﻿@model WriteMe.Controllers.Blabla 
+<input type="hidden" id="current" value="@Model.first.Email" />
+<input type="hidden" id="friend" value="@Model.second.Email" />
+
+<section class="col-9 h-100">
+    <header class="dialog-header w-100">
+        <div>Dima Senko</div>
+        <div class="status-header">Online</div>
+    </header>
+    <div class="row no-gutters dialog-content">
+        <section class="col-8">
+            <div class="dialog-messages" id="chat">
+                <div class="messages">
+                    <div>
+                        <div class="companion-message">Hi debil</div>
+                    </div>
+                </div>
+                <div class="messages my-message">
+                    <div class="my-message-text">Hi debil</div>
+                </div>
+            </div>
+            <footer class="messages-footer">
+                <input class="message-input" id="message" placeholder="Type a message" type="text">
+            </footer>
+        </section>
+        <!--                Do not touch-->
+
+
+        <aside class="col-4 user-info">
+            <header class="user-info-header w-100">
+                <div class="row no-gutters">
+                    <div class="col-3">
+                        <div class="user-image-holder">
+                            <img alt="" src="https://via.placeholder.com/320x320">
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="user-name-info">Dima Senko</div>
+                        <div class="user-status-info">Online</div>
+                    </div>
+                </div>
+            </header>
+            <section class="user-info-content">
+                <input type="checkbox" value="mute" name="mute" id="mute">
+                <label class="mb-0" for="mute">Mute Notifications</label>
+            </section>
+
+        </aside>
+    </div>
+</section>
+
+   
