@@ -16,6 +16,7 @@ namespace WriteMe.Data
         }
 
         public DbSet<Chat> Chats { get; set; }
+
         public DbSet<FriendList> FriendLists{ get; set; }
         
         public DbSet<FriendsRelationship> FriendsRelationships { get; set; }

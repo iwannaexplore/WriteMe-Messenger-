@@ -11,6 +11,10 @@ namespace WriteMe.Data.Entities
 
         public ICollection<FriendListUser> FriendListUsers { get; set; }
 
+        public FriendsRelationship FriendsRelationship { get; set; }
+
+        public int FriendsRelationshipId { get; set; }
+        
         public Chat Chat { get; set; }
     }
 }

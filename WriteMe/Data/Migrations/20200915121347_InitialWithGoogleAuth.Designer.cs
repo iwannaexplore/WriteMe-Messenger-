@@ -10,8 +10,8 @@ using WriteMe.Data;
 namespace WriteMe.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200911114048_ChangedFriendListEntity")]
-    partial class ChangedFriendListEntity
+    [Migration("20200915121347_InitialWithGoogleAuth")]
+    partial class InitialWithGoogleAuth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,14 +53,14 @@ namespace WriteMe.Data.Migrations
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "d47e8eba-51d4-4328-818a-438acf0eff7c",
+                            ConcurrencyStamp = "fd93520a-ff1a-4522-b03a-18d7c60fc9a7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "132d7597-e9de-4338-8d3a-07c6f9b2e7f9",
+                            ConcurrencyStamp = "eae0ad0b-87d4-4d9e-87a6-36ef72bece1e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -177,18 +177,10 @@ namespace WriteMe.Data.Migrations
                     b.Property<int>("FriendListId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FriendRelationshipId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FriendsRelationshipId")
-                        .HasColumnType("int");
-
                     b.HasKey("ChatId");
 
                     b.HasIndex("FriendListId")
                         .IsUnique();
-
-                    b.HasIndex("FriendsRelationshipId");
 
                     b.ToTable("Chats");
 
@@ -196,8 +188,7 @@ namespace WriteMe.Data.Migrations
                         new
                         {
                             ChatId = 1,
-                            FriendListId = 1,
-                            FriendRelationshipId = 1
+                            FriendListId = 1
                         });
                 });
 
@@ -208,14 +199,20 @@ namespace WriteMe.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("FriendsRelationshipId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("FriendList");
+                    b.HasIndex("FriendsRelationshipId");
+
+                    b.ToTable("FriendLists");
 
                     b.HasData(
                         new
                         {
-                            Id = 1
+                            Id = 1,
+                            FriendsRelationshipId = 1
                         });
                 });
 
@@ -312,7 +309,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 10, 22, 0, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 0, 0, 0, DateTimeKind.Local),
                             Text = "Hello, Vika"
                         },
                         new
@@ -321,7 +318,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 2,
                             RelatingUserId = 1,
-                            SendingTime = new DateTime(2020, 9, 10, 22, 10, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 10, 0, 0, DateTimeKind.Local),
                             Text = "Hello, Julie"
                         },
                         new
@@ -330,7 +327,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 10, 22, 15, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 15, 0, 0, DateTimeKind.Local),
                             Text = "How are you?"
                         },
                         new
@@ -339,7 +336,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 2,
                             RelatingUserId = 1,
-                            SendingTime = new DateTime(2020, 9, 10, 22, 20, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 20, 0, 0, DateTimeKind.Local),
                             Text = "Good"
                         },
                         new
@@ -348,7 +345,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 10, 22, 25, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 25, 0, 0, DateTimeKind.Local),
                             Text = "Me too"
                         },
                         new
@@ -357,7 +354,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 10, 22, 30, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 30, 0, 0, DateTimeKind.Local),
                             Text = "Flexim? Vika"
                         },
                         new
@@ -366,7 +363,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 9, 22, 0, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 13, 22, 0, 0, 0, DateTimeKind.Local),
                             Text = "Hello, Vika"
                         },
                         new
@@ -375,7 +372,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 2,
                             RelatingUserId = 1,
-                            SendingTime = new DateTime(2020, 9, 9, 22, 10, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 13, 22, 10, 0, 0, DateTimeKind.Local),
                             Text = "Hello, Julie"
                         },
                         new
@@ -384,7 +381,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 9, 22, 15, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 13, 22, 15, 0, 0, DateTimeKind.Local),
                             Text = "How are you?"
                         },
                         new
@@ -393,7 +390,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 2,
                             RelatingUserId = 1,
-                            SendingTime = new DateTime(2020, 9, 9, 22, 20, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 13, 22, 20, 0, 0, DateTimeKind.Local),
                             Text = "Good"
                         },
                         new
@@ -402,7 +399,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 9, 22, 25, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 13, 22, 25, 0, 0, DateTimeKind.Local),
                             Text = "Me too"
                         },
                         new
@@ -411,7 +408,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 9, 22, 30, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 13, 22, 30, 0, 0, DateTimeKind.Local),
                             Text = "Flexim? Vika"
                         });
                 });
@@ -493,10 +490,10 @@ namespace WriteMe.Data.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6ec495cd-c279-4ab3-91b9-08af68f89ede",
+                            ConcurrencyStamp = "688fc33f-c39f-42b3-8559-c952843c6108",
                             Email = "jylie@mail.com",
                             EmailConfirmed = true,
-                            LastActivityTime = new DateTime(2020, 9, 10, 14, 40, 47, 511, DateTimeKind.Local).AddTicks(9755),
+                            LastActivityTime = new DateTime(2020, 9, 14, 15, 13, 46, 573, DateTimeKind.Local).AddTicks(5521),
                             LockoutEnabled = false,
                             NormalizedEmail = "JYLIE@GMAIL.COM",
                             NormalizedUserName = "JYLIE@MAIL.COM",
@@ -509,10 +506,10 @@ namespace WriteMe.Data.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d20bf11-cf06-46b0-952f-0b95cee4f785",
+                            ConcurrencyStamp = "bd4942c7-ba70-4b04-8c8b-5b7df6b643d2",
                             Email = "vika@mail.com",
                             EmailConfirmed = true,
-                            LastActivityTime = new DateTime(2020, 9, 10, 14, 40, 47, 513, DateTimeKind.Local).AddTicks(6029),
+                            LastActivityTime = new DateTime(2020, 9, 14, 15, 13, 46, 575, DateTimeKind.Local).AddTicks(3012),
                             LockoutEnabled = false,
                             NormalizedEmail = "VIKA@GMAIL.COM",
                             NormalizedUserName = "VIKA@MAIL.COM",
@@ -581,10 +578,15 @@ namespace WriteMe.Data.Migrations
                         .HasForeignKey("WriteMe.Data.Entities.Chat", "FriendListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("WriteMe.Data.Entities.FriendList", b =>
+                {
                     b.HasOne("WriteMe.Data.Entities.FriendsRelationship", "FriendsRelationship")
                         .WithMany()
-                        .HasForeignKey("FriendsRelationshipId");
+                        .HasForeignKey("FriendsRelationshipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WriteMe.Data.Entities.FriendListUser", b =>
