@@ -28,18 +28,20 @@ namespace WriteMe.Controllers
         private readonly DbSet<FriendsRelationship> _friendsRelationshipRepository;
         private readonly DbSet<Message> _messageRepository;
         private readonly DbSet<FriendList> _friendListRepository;
-        private readonly ApplicationDbContext _context;
-        private  User CurrentUser => _context.Users.First(u => u.UserName == User.Identity.Name);
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        private int CurrentUserId =>
+            int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
-            _userRepository = _context.Users;
-            _chatRepository = _context.Chats;
-            _friendsRelationshipRepository = _context.FriendsRelationships;
-            _messageRepository = _context.Messages;
-            _friendListRepository = _context.FriendLists;
+            _userRepository = context.Users;
+            _chatRepository = context.Chats;
+            _friendsRelationshipRepository = context.FriendsRelationships;
+            _messageRepository = context.Messages;
+            _friendListRepository = context.FriendLists;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -47,29 +49,31 @@ namespace WriteMe.Controllers
         {
             var friendList = _friendListRepository.Include(fl => fl.FriendListUsers)
                 .Where(fl =>
-                    fl.FriendListUsers.Any(flu => flu.UserId == CurrentUser.Id) && fl.FriendsRelationshipId == 1)
+                    fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId) && fl.FriendsRelationshipId == 1)
                 .ToList();
             List<User> users = new List<User>();
             foreach (var list in friendList)
             {
                 users.AddRange(_userRepository.Include(u => u.FriendListUsers)
-                    .Where(u => u.FriendListUsers.Any(flu => flu.FriendListId == list.Id) && u.Id != CurrentUser.Id));
+                    .Where(u => u.FriendListUsers.Any(flu => flu.FriendListId == list.Id) && u.Id != CurrentUserId));
             }
-
 
             return View(new Blabla() {Users = users});
         }
 
-        public IActionResult DisplayMessages(string from, int to)
+        public IActionResult DisplayMessages(int to)
         {
             Chat currentChat = _chatRepository.Include(c => c.FriendList).ThenInclude(fl => fl.FriendListUsers)
                 .Include(c => c.Messages)
-                .FirstOrDefault(c => c.FriendList.FriendListUsers.Any(flu => flu.UserId == to) && c.FriendList.FriendListUsers.Any(flu => flu.UserId == CurrentUser.Id));
+                .FirstOrDefault(c =>
+                    c.FriendList.FriendListUsers.Any(flu => flu.UserId == to) &&
+                    c.FriendList.FriendListUsers.Any(flu => flu.UserId == CurrentUserId));
 
-            var messages = _messageRepository.Where(m => m.ChatId == currentChat.ChatId).ToList();
+            var messages = _messageRepository.Include(m => m.RelatedUser).Where(m => m.ChatId == currentChat.ChatId)
+                .ToList();
 
             return PartialView("_ChatRoom",
-                new HelpMeGod() {Messages = messages, Friend = _userRepository.First(u=>u.Id == to)});
+                new HelpMeGod() {Messages = messages, Friend = _userRepository.First(u => u.Id == to)});
         }
 
 

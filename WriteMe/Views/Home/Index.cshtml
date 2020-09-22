@@ -22,7 +22,6 @@
             <div class="search-form p-3">
                 <input class="search-input" placeholder="Search for people..." type="search">
             </div>
-
             <div class="users-content">
                 @foreach (var user in Model.Users)
                 {
@@ -42,8 +41,6 @@
                     </div>
                 }
             </div>
-
-
         </section>
         <section class="col-9 h-100" id="messagesSection"></section>
     </div>
@@ -53,10 +50,10 @@
 @section Scripts {
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script>
-
         function showMessages(to) {
             var url = '@Url.Action("DisplayMessages", "Home")';
-            $('#messagesSection').load(url, { from: $('#current').val(), to: to });
-        }
+            $('#messagesSection').load(url, {to: to });
+        };
     </script>
+    <script src="~/js/chat.js"></script>
 }

@@ -1,18 +1,17 @@
-﻿const hubConnection = new signalR.HubConnectionBuilder()
+﻿;var hubConnection = new signalR.HubConnectionBuilder()
     .withUrl("/chat")
     .build();
 
 hubConnection.serverTimeoutMilliseconds = 1000 * 60 * 10;
 
 hubConnection.on('Receive',
-    function (message, userName) {
+    function(message, userName) {
 
         let lastElemInChat = $(".messages").last();
         if (userName == $("#friend").val()) {
             var companionMessage = $("<div class='companion-message'></div>");
             $(companionMessage).text(message);
             companionMessage = $("<div></div>").append(companionMessage);
-
 
             if (!lastElemInChat.hasClass("my-message")) {
                 $(lastElemInChat).append(companionMessage);
@@ -26,7 +25,6 @@ hubConnection.on('Receive',
             $(userMessage).text(message);
             userMessage = $("<div></div>").append(userMessage);
 
-
             if (lastElemInChat.hasClass("my-message")) {
                 $(lastElemInChat).append(userMessage);
             } else {
@@ -35,16 +33,8 @@ hubConnection.on('Receive',
                 $("#chat").append(userBlock);
             }
         }
-    });
 
-// отправка сообщения на сервер
-$("#message").keyup(function (e) {
-    if (e.key === 'Enter') {
-        console.log(e.key);
-        let message = document.getElementById("message").value;
-        hubConnection.invoke("Send", message, $("#current").val(), $("#friend").val());
-        $(this).val("");
-    }
-});
+        document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
+    });
 
 hubConnection.start();
