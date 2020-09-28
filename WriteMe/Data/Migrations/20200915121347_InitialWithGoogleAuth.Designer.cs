@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WriteMe.Data;
 
 namespace WriteMe.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200915121347_InitialWithGoogleAuth")]
+    partial class InitialWithGoogleAuth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,14 +53,14 @@ namespace WriteMe.Data.Migrations
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "3e7b5809-445c-4277-a41e-9381ba15240f",
+                            ConcurrencyStamp = "fd93520a-ff1a-4522-b03a-18d7c60fc9a7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "f4312d78-26ba-49b9-8bec-1bc17943fad3",
+                            ConcurrencyStamp = "eae0ad0b-87d4-4d9e-87a6-36ef72bece1e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -144,28 +146,6 @@ namespace WriteMe.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            RoleId = 2
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -209,21 +189,6 @@ namespace WriteMe.Data.Migrations
                         {
                             ChatId = 1,
                             FriendListId = 1
-                        },
-                        new
-                        {
-                            ChatId = 2,
-                            FriendListId = 2
-                        },
-                        new
-                        {
-                            ChatId = 3,
-                            FriendListId = 3
-                        },
-                        new
-                        {
-                            ChatId = 4,
-                            FriendListId = 4
                         });
                 });
 
@@ -248,21 +213,6 @@ namespace WriteMe.Data.Migrations
                         {
                             Id = 1,
                             FriendsRelationshipId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FriendsRelationshipId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FriendsRelationshipId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            FriendsRelationshipId = 2
                         });
                 });
 
@@ -278,7 +228,7 @@ namespace WriteMe.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FriendListUsers");
+                    b.ToTable("FriendListUser");
 
                     b.HasData(
                         new
@@ -290,36 +240,6 @@ namespace WriteMe.Data.Migrations
                         {
                             FriendListId = 1,
                             UserId = 2
-                        },
-                        new
-                        {
-                            FriendListId = 2,
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FriendListId = 2,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            FriendListId = 3,
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FriendListId = 3,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            FriendListId = 4,
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FriendListId = 4,
-                            UserId = 1
                         });
                 });
 
@@ -389,7 +309,7 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 0, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 0, 0, 0, DateTimeKind.Local),
                             Text = "Hello, Vika"
                         },
                         new
@@ -398,62 +318,98 @@ namespace WriteMe.Data.Migrations
                             ChatId = 1,
                             RelatedUserId = 2,
                             RelatingUserId = 1,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 10, 0, 0, DateTimeKind.Local),
+                            SendingTime = new DateTime(2020, 9, 14, 22, 10, 0, 0, DateTimeKind.Local),
                             Text = "Hello, Julie"
                         },
                         new
                         {
                             MessageId = 3,
-                            ChatId = 2,
-                            RelatedUserId = 3,
-                            RelatingUserId = 4,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 0, 0, 0, DateTimeKind.Local),
-                            Text = "Hello, dimon"
+                            ChatId = 1,
+                            RelatedUserId = 1,
+                            RelatingUserId = 2,
+                            SendingTime = new DateTime(2020, 9, 14, 22, 15, 0, 0, DateTimeKind.Local),
+                            Text = "How are you?"
                         },
                         new
                         {
                             MessageId = 4,
-                            ChatId = 2,
-                            RelatedUserId = 4,
-                            RelatingUserId = 3,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 10, 0, 0, DateTimeKind.Local),
-                            Text = "Hello, admin"
+                            ChatId = 1,
+                            RelatedUserId = 2,
+                            RelatingUserId = 1,
+                            SendingTime = new DateTime(2020, 9, 14, 22, 20, 0, 0, DateTimeKind.Local),
+                            Text = "Good"
                         },
                         new
                         {
                             MessageId = 5,
-                            ChatId = 3,
-                            RelatedUserId = 2,
-                            RelatingUserId = 3,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 0, 0, 0, DateTimeKind.Local),
-                            Text = "Hello, admin"
+                            ChatId = 1,
+                            RelatedUserId = 1,
+                            RelatingUserId = 2,
+                            SendingTime = new DateTime(2020, 9, 14, 22, 25, 0, 0, DateTimeKind.Local),
+                            Text = "Me too"
                         },
                         new
                         {
                             MessageId = 6,
-                            ChatId = 3,
-                            RelatedUserId = 3,
+                            ChatId = 1,
+                            RelatedUserId = 1,
                             RelatingUserId = 2,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 10, 0, 0, DateTimeKind.Local),
-                            Text = "Hello, Vika"
+                            SendingTime = new DateTime(2020, 9, 14, 22, 30, 0, 0, DateTimeKind.Local),
+                            Text = "Flexim? Vika"
                         },
                         new
                         {
                             MessageId = 7,
-                            ChatId = 4,
+                            ChatId = 1,
                             RelatedUserId = 1,
-                            RelatingUserId = 3,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 0, 0, 0, DateTimeKind.Local),
-                            Text = "Hello, admin"
+                            RelatingUserId = 2,
+                            SendingTime = new DateTime(2020, 9, 13, 22, 0, 0, 0, DateTimeKind.Local),
+                            Text = "Hello, Vika"
                         },
                         new
                         {
                             MessageId = 8,
-                            ChatId = 4,
-                            RelatedUserId = 3,
+                            ChatId = 1,
+                            RelatedUserId = 2,
                             RelatingUserId = 1,
-                            SendingTime = new DateTime(2020, 9, 27, 22, 10, 0, 0, DateTimeKind.Local),
-                            Text = "Hello, julie. Idi v ban"
+                            SendingTime = new DateTime(2020, 9, 13, 22, 10, 0, 0, DateTimeKind.Local),
+                            Text = "Hello, Julie"
+                        },
+                        new
+                        {
+                            MessageId = 9,
+                            ChatId = 1,
+                            RelatedUserId = 1,
+                            RelatingUserId = 2,
+                            SendingTime = new DateTime(2020, 9, 13, 22, 15, 0, 0, DateTimeKind.Local),
+                            Text = "How are you?"
+                        },
+                        new
+                        {
+                            MessageId = 10,
+                            ChatId = 1,
+                            RelatedUserId = 2,
+                            RelatingUserId = 1,
+                            SendingTime = new DateTime(2020, 9, 13, 22, 20, 0, 0, DateTimeKind.Local),
+                            Text = "Good"
+                        },
+                        new
+                        {
+                            MessageId = 11,
+                            ChatId = 1,
+                            RelatedUserId = 1,
+                            RelatingUserId = 2,
+                            SendingTime = new DateTime(2020, 9, 13, 22, 25, 0, 0, DateTimeKind.Local),
+                            Text = "Me too"
+                        },
+                        new
+                        {
+                            MessageId = 12,
+                            ChatId = 1,
+                            RelatedUserId = 1,
+                            RelatingUserId = 2,
+                            SendingTime = new DateTime(2020, 9, 13, 22, 30, 0, 0, DateTimeKind.Local),
+                            Text = "Flexim? Vika"
                         });
                 });
 
@@ -477,6 +433,9 @@ namespace WriteMe.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastActivityTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -531,16 +490,15 @@ namespace WriteMe.Data.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e820e3f-4c07-4700-b488-fcf8fb5e59a5",
+                            ConcurrencyStamp = "688fc33f-c39f-42b3-8559-c952843c6108",
                             Email = "jylie@mail.com",
                             EmailConfirmed = true,
+                            LastActivityTime = new DateTime(2020, 9, 14, 15, 13, 46, 573, DateTimeKind.Local).AddTicks(5521),
                             LockoutEnabled = false,
                             NormalizedEmail = "JYLIE@GMAIL.COM",
                             NormalizedUserName = "JYLIE@MAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEENOZCJ1R0VlJ5tsgHrcbN+UykPJ8cVM7XY+Db7XJrrWsH/MMSI7Jtb0nVtQ3rKf/Q==",
                             PhoneNumberConfirmed = false,
-                            ProfilePicture = "304042a2-29bd-410c-8097-1744461b6c88_I2ff7ApwdMAM.jpg",
-                            SecurityStamp = "",
+                            ProfilePicture = "",
                             TwoFactorEnabled = false,
                             UserName = "jylie@mail.com"
                         },
@@ -548,52 +506,17 @@ namespace WriteMe.Data.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a585c003-e24e-4400-85d6-cb7826f28e47",
+                            ConcurrencyStamp = "bd4942c7-ba70-4b04-8c8b-5b7df6b643d2",
                             Email = "vika@mail.com",
                             EmailConfirmed = true,
+                            LastActivityTime = new DateTime(2020, 9, 14, 15, 13, 46, 575, DateTimeKind.Local).AddTicks(3012),
                             LockoutEnabled = false,
                             NormalizedEmail = "VIKA@GMAIL.COM",
                             NormalizedUserName = "VIKA@MAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENP9fpRVdIBpsWMF2aAMaCgco9tiUwVqpQprWfgueF5zbjIepYgeWmxPqFE/5b+s6A==",
                             PhoneNumberConfirmed = false,
-                            ProfilePicture = "304042a2-29bd-410c-8097-1744461b6c88_photo_2019-01-26_19-32-55.jpg",
-                            SecurityStamp = "",
+                            ProfilePicture = "",
                             TwoFactorEnabled = false,
                             UserName = "vika@mail.com"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "a387ff6a-265a-495d-bd8e-8ed42deadb60",
-                            Email = "admin@gmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@GMAIL.COM",
-                            NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELe2AnIxu2U6Y75BVsaqdPt+11LnwDK9Gje2lXqLfmo5EqQlUX0W+k53NZgn6RTa2Q==",
-                            PhoneNumberConfirmed = false,
-                            ProfilePicture = "304042a2-29bd-410c-8097-1744461b6c88_photo_2020-03-28_22-57-55.jpg",
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@gmail.com"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "09481aeb-ca82-4190-a6d9-4e77a0e09649",
-                            Email = "iwannaexplore@gmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "IWANNAEXPLORE@GMAIL.COM",
-                            NormalizedUserName = "IWANNAEXPLORE@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFwEdyYEzO6RXhJiPJtbAK8O1b9pN4uWAw2EkwT/Fea56MAAR6BY1OCz8fTJeTzuKg==",
-                            PhoneNumberConfirmed = false,
-                            ProfilePicture = "304042a2-29bd-410c-8097-1744461b6c88_photo_2020-04-24_17-05-28.jpg",
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "iwannaexplore@gmail.com"
                         });
                 });
 

@@ -1,0 +1,70 @@
+﻿@model WriteMe.Controllers.HelpMeGod
+<input type="hidden" id="friend" value="@Model.Friend.Email"/>
+<header class="dialog-header w-100">
+    <div>@Model.Friend.Email</div>
+    <div id="user-status" class="status-header"></div>
+</header>
+<div class="row no-gutters dialog-content">
+    <section class="col-8">
+        <div class="dialog-messages" id="chat">
+            @foreach (var message in Model.Messages)
+            {
+                if (message.RelatedUser.Email == Model.Friend.Email)
+                {
+                    <div class='messages'>
+                        <div class='companion-message'>@message.Text</div>
+                    </div>
+                }
+                else
+                {
+                    <div class='messages my-message'>
+                        <div class='my-message-text'>@message.Text</div>
+                    </div>
+                }
+            }
+        </div>
+        <footer class="messages-footer">
+            <input class="message-input" id="message" placeholder="Type a message" type="text">
+        </footer>
+    </section>
+    <aside class="col-4 user-info">
+        <header class="user-info-header w-100">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <div class="user-image-holder">
+                        <img alt="" src="~/images/@Model.Friend.ProfilePicture">
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="user-name-info">@Model.Friend.UserName</div>
+                    <div class="user-status-info">@Model.FriendRelationship</div>
+                </div>
+            </div>
+        </header>
+        <section class="user-info-content">
+            <input type="checkbox" value="mute" name="mute" id="mute">
+            <label class="mb-0" for="mute">Mute Notifications</label>
+        </section>
+    </aside>
+</div>
+<script>
+    document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
+</script>
+<script>
+    $(document).ready(function() {
+        console.log("ready!");
+        hubConnection.invoke("GetOnlineInfo", $("#friend").val());
+        setInterval(function() {
+                hubConnection.invoke("GetOnlineInfo", $("#friend").val());
+            },
+            1 * 1000);
+    });
+
+    $("#message").keyup(function(e) {
+        if (e.key === 'Enter') {
+            let message = document.getElementById("message").value;
+            hubConnection.invoke("Send", message, $("#current").val(), $("#friend").val());
+            $(this).val("");
+        }
+    });
+</script>
