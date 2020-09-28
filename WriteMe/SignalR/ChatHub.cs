@@ -17,7 +17,7 @@ namespace WriteMe.SignalR
         private readonly ApplicationDbContext _context;
         private string CurrentUserEmail => Context.User.Identity.Name;
 
-        private List<string> UsersOnline { get; set; } = new List<string>();
+        private static List<string> UsersOnline { get; set; } = new List<string>();
 
         public ChatHub(ApplicationDbContext context)
         {
@@ -38,21 +38,30 @@ namespace WriteMe.SignalR
 
             _context.Messages.Add(new Message()
             {
-                ChatId = currentChat.ChatId, RelatedUserId = fromUser.Id, RelatingUserId = toUser.Id,
-                SendingTime = DateTime.Now, Text = message
+                ChatId = currentChat.ChatId,
+                RelatedUserId = fromUser.Id,
+                RelatingUserId = toUser.Id,
+                SendingTime = DateTime.Now,
+                Text = message
             });
             _context.SaveChanges();
 
             await Clients.Users(fromUser.Email, to).SendAsync("Receive", message, CurrentUserEmail);
         }
 
-        public async Task ChangeOnlineInfo()
+        public async Task GetOnlineInfo(string friendEmail)
         {
-            var currentUser = _context.Users.First(u => u.Email == CurrentUserEmail);
 
-           
+            if (UsersOnline.Contains(friendEmail))
+            {
+                await Clients.User(CurrentUserEmail).SendAsync("ChangeOnline", "Online");
+            }
+            else
+            {
+                await Clients.Users(CurrentUserEmail).SendAsync("ChangeOnline", "Offline");
+            }
 
-            await Clients.All.SendAsync("ChangeOnline", "Online");
+
         }
 
         public override Task OnConnectedAsync()

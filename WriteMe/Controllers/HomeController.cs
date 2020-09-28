@@ -49,7 +49,7 @@ namespace WriteMe.Controllers
         {
             var friendList = _friendListRepository.Include(fl => fl.FriendListUsers)
                 .Where(fl =>
-                    fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId) && fl.FriendsRelationshipId == 1)
+                    fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId))
                 .ToList();
             List<User> users = new List<User>();
             foreach (var list in friendList)
@@ -73,7 +73,7 @@ namespace WriteMe.Controllers
                 .ToList();
 
             return PartialView("_ChatRoom",
-                new HelpMeGod() {Messages = messages, Friend = _userRepository.First(u => u.Id == to)});
+                new HelpMeGod() {Messages = messages, Friend = _userRepository.First(u => u.Id == to), FriendRelationship = _friendListRepository.Include(flr=>flr.FriendsRelationship).Include(flr=>flr.FriendListUsers).First(fl=>fl.FriendListUsers.Any(flu=>flu.UserId == CurrentUserId) && fl.FriendListUsers.Any(flu => flu.UserId == to)).FriendsRelationship.Name});
         }
 
 
@@ -93,5 +93,7 @@ namespace WriteMe.Controllers
     {
         public List<Message> Messages { get; set; }
         public User Friend { get; set; }
+
+        public string FriendRelationship { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 <input type="hidden" id="friend" value="@Model.Friend.Email"/>
 <header class="dialog-header w-100">
     <div>@Model.Friend.Email</div>
-    <div class="status-header">OnLiNe</div>
+    <div id="user-status" class="status-header"></div>
 </header>
 <div class="row no-gutters dialog-content">
     <section class="col-8">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-9">
                     <div class="user-name-info">@Model.Friend.UserName</div>
-                    <div class="user-status-info">Online</div>
+                    <div class="user-status-info">@Model.FriendRelationship</div>
                 </div>
             </div>
         </header>
@@ -51,8 +51,16 @@
     document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
 </script>
 <script>
-    // отправка сообщения на сервер
-    $("#message").keyup(function (e) {
+    $(document).ready(function() {
+        console.log("ready!");
+        hubConnection.invoke("GetOnlineInfo", $("#friend").val());
+        setInterval(function() {
+                hubConnection.invoke("GetOnlineInfo", $("#friend").val());
+            },
+            1 * 1000);
+    });
+
+    $("#message").keyup(function(e) {
         if (e.key === 'Enter') {
             let message = document.getElementById("message").value;
             hubConnection.invoke("Send", message, $("#current").val(), $("#friend").val());

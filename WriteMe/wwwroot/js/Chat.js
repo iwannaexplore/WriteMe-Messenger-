@@ -1,4 +1,4 @@
-﻿;var hubConnection = new signalR.HubConnectionBuilder()
+﻿;const hubConnection = new signalR.HubConnectionBuilder()
     .withUrl("/chat")
     .build();
 
@@ -6,8 +6,7 @@
 hubConnection.serverTimeoutMilliseconds = 1000 * 60 * 10;
 
 hubConnection.on('Receive',
-    function(message, userName) {
-
+    function (message, userName) {
         let lastElemInChat = $(".messages").last();
         if (userName == $("#friend").val()) {
             var companionMessage = $("<div class='companion-message'></div>");
@@ -36,6 +35,11 @@ hubConnection.on('Receive',
         }
 
         document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
+    });
+
+hubConnection.on('ChangeOnline',
+    function (status) {
+        $("#user-status").text(status);
     });
 
 hubConnection.start();
