@@ -12,7 +12,7 @@ namespace WriteMe.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         public DbSet<Chat> Chats { get; set; }
@@ -22,6 +22,8 @@ namespace WriteMe.Data
         public DbSet<FriendsRelationship> FriendsRelationships { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<FriendListUser> FriendListUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,7 +52,7 @@ namespace WriteMe.Data
                 .WithMany(c => c.FriendListUsers)
                 .HasForeignKey(bc => bc.UserId);
 
-            modelBuilder.Seed();
+            //modelBuilder.Seed();
         }
     }
 }

@@ -127,13 +127,14 @@ body {
     }
 
 .user-element {
-    padding-bottom: 10px;
-    padding-left: 10px;
+    padding: 5px 0 5px 10px;
     width: 100%;
+    transition: background-color 0.2s linear;
 }
 
 .user-element:hover {
     cursor: pointer;
+    background-color: #dedede;
 }
 
     .user-image-holder {

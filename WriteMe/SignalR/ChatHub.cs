@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +15,9 @@ namespace WriteMe.SignalR
     public class ChatHub : Hub
     {
         private readonly ApplicationDbContext _context;
+        private string CurrentUserEmail => Context.User.Identity.Name;
+
+        private List<string> UsersOnline { get; set; } = new List<string>();
 
         public ChatHub(ApplicationDbContext context)
         {
@@ -39,9 +43,28 @@ namespace WriteMe.SignalR
             });
             _context.SaveChanges();
 
-            var currentUser = Context.User.Identity.Name;
+            await Clients.Users(fromUser.Email, to).SendAsync("Receive", message, CurrentUserEmail);
+        }
 
-            await Clients.Users(fromUser.Email, to).SendAsync("Receive", message, currentUser);
+        public async Task ChangeOnlineInfo()
+        {
+            var currentUser = _context.Users.First(u => u.Email == CurrentUserEmail);
+
+           
+
+            await Clients.All.SendAsync("ChangeOnline", "Online");
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            UsersOnline.Add(CurrentUserEmail);
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            UsersOnline.Remove(CurrentUserEmail);
+            return base.OnDisconnectedAsync(exception);
         }
     }
 }

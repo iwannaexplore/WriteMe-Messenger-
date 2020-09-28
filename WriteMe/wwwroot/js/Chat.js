@@ -2,6 +2,7 @@
     .withUrl("/chat")
     .build();
 
+
 hubConnection.serverTimeoutMilliseconds = 1000 * 60 * 10;
 
 hubConnection.on('Receive',

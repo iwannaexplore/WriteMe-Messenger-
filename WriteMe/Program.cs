@@ -19,31 +19,11 @@ namespace WriteMe
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            InitializeAdminAndUser(host);
             host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
-
-        private static async void InitializeAdminAndUser(IHost host)
-        {
-            var logger = NLogBuilder.ConfigureNLog("Nlog.config").GetCurrentClassLogger();
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var userManager = services.GetRequiredService<UserManager<User>>();
-                    await RoleInitializer.InitializeAsync(userManager);
-                    logger.Info("Roles created succesfully");
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "An error occurred while seeding the database.");
-                }
-            }
-        }
     }
 }
