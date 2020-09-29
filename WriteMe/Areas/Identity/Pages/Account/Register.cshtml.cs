@@ -81,7 +81,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email, ProfilePicture = UploadedFile(Input.ProfileImage) };
+                var user = new User { UserName = Input.Email, Email = Input.Email, ProfilePicture = UploadedPhoto(Input.ProfileImage) };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -118,7 +118,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private string UploadedFile(IFormFile file)
+        private string UploadedPhoto(IFormFile file)
         {
             string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
 
