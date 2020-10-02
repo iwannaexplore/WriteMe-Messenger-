@@ -183,7 +183,7 @@ body {
 
 .user-element-content::after {
     background-color: #e4e4e4;
-    bottom: -5%;
+    bottom: -8%;
     content: "";
     height: 1px;
     position: absolute;
@@ -249,10 +249,9 @@ body {
 
 /*Dialog Content*/
 
-.dialog-content { height: 600px; }
+.dialog-content { height: 604px; }
 
 .messages-footer {
-    background-color: orangered;
     border-right: 1px #e4e4e4 solid;
     bottom: 0;
     display: flex;

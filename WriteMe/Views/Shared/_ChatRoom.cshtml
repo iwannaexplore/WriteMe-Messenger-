@@ -38,12 +38,23 @@
                 <div class="col-9">
                     <div class="user-name-info">@Model.Friend.UserName</div>
                     <div class="user-status-info">@Model.FriendRelationship</div>
+                    <input type="hidden" id="friendRelationship" value="@Model.FriendRelationship"/>
                 </div>
             </div>
         </header>
         <section class="user-info-content">
             <input type="checkbox" value="mute" name="mute" id="mute">
             <label class="mb-0" for="mute">Mute Notifications</label>
+            <br />
+            <br />
+            @if (@Model.FriendRelationship == "Blocked")
+            {
+                <a class="btn btn-sm btn-success" onclick="ChangeUserRelationship(@Model.Friend.Id)">Unblock</a>
+            }
+            else
+            {
+                <a class="btn btn-sm btn-danger" onclick="ChangeUserRelationship(@Model.Friend.Id)">Block</a>
+            }
         </section>
     </aside>
 </div>
@@ -57,14 +68,24 @@
         setInterval(function() {
                 hubConnection.invoke("GetOnlineInfo", $("#friend").val());
             },
-            1 * 1000);
-    });
+            20 * 1000);
+        if ($("#friendRelationship").val() == "Friend") {
+            $("#message").keyup(function(e) {
+                if (e.key === 'Enter') {
+                    let message = document.getElementById("message").value;
+                    hubConnection.invoke("Send", message, $("#current").val(), $("#friend").val());
+                    $(this).val("");
+                }
+            });
 
-    $("#message").keyup(function(e) {
-        if (e.key === 'Enter') {
-            let message = document.getElementById("message").value;
-            hubConnection.invoke("Send", message, $("#current").val(), $("#friend").val());
-            $(this).val("");
+        } else {
+            $("#message").prop("disabled", true);
+            $("#message").attr("placeholder", "You can't write this user");
         }
     });
+
+    function ChangeUserRelationship(to) {
+        var url = '@Url.Action("ChangeUserRelationship", "Home")';
+        $('#messagesSection').load(url, { friendId: to });
+    };
 </script>

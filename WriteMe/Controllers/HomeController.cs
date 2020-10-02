@@ -29,6 +29,7 @@ namespace WriteMe.Controllers
         private readonly DbSet<Message> _messageRepository;
         private readonly DbSet<FriendList> _friendListRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private ApplicationDbContext _context;
 
         private int CurrentUserId =>
             int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -42,6 +43,7 @@ namespace WriteMe.Controllers
             _messageRepository = context.Messages;
             _friendListRepository = context.FriendLists;
             _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
 
@@ -73,7 +75,14 @@ namespace WriteMe.Controllers
                 .ToList();
 
             return PartialView("_ChatRoom",
-                new HelpMeGod() {Messages = messages, Friend = _userRepository.First(u => u.Id == to), FriendRelationship = _friendListRepository.Include(flr=>flr.FriendsRelationship).Include(flr=>flr.FriendListUsers).First(fl=>fl.FriendListUsers.Any(flu=>flu.UserId == CurrentUserId) && fl.FriendListUsers.Any(flu => flu.UserId == to)).FriendsRelationship.Name});
+                new HelpMeGod()
+                {
+                    Messages = messages, Friend = _userRepository.First(u => u.Id == to),
+                    FriendRelationship = _friendListRepository.Include(flr => flr.FriendsRelationship)
+                        .Include(flr => flr.FriendListUsers).First(fl =>
+                            fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId) &&
+                            fl.FriendListUsers.Any(flu => flu.UserId == to)).FriendsRelationship.Name
+                });
         }
 
 
@@ -81,6 +90,19 @@ namespace WriteMe.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+        }
+
+        public IActionResult ChangeUserRelationship(int friendId)
+        {
+            var friendList = _friendListRepository.Include(flr => flr.FriendsRelationship)
+                .Include(flr => flr.FriendListUsers).First(fl =>
+                    fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId) &&
+                    fl.FriendListUsers.Any(flu => flu.UserId == friendId));
+
+            friendList.FriendsRelationshipId = friendList.FriendsRelationshipId == 1 ? 2 : 1;
+            _context.SaveChanges();
+
+            return RedirectToAction("DisplayMessages", new {to = friendId});
         }
     }
 
