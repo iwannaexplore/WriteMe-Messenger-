@@ -54,7 +54,8 @@ namespace WriteMe.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+                MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -79,9 +80,11 @@ namespace WriteMe.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            CheckImageFormat(Input.ProfileImage);
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email, ProfilePicture = UploadedPhoto(Input.ProfileImage) };
+                var user = new User
+                    {UserName = Input.Email, Email = Input.Email, ProfilePicture = UploadedPhoto(Input.ProfileImage)};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -92,7 +95,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                        values: new {area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl},
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -100,7 +103,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new {email = Input.Email, returnUrl = returnUrl});
                     }
                     else
                     {
@@ -108,6 +111,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -123,7 +127,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
             string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
 
             var path = Path.Combine(
-                Directory.GetCurrentDirectory(), "wwwroot","images",
+                Directory.GetCurrentDirectory(), "wwwroot", "images",
                 uniqueFileName);
 
             using (var stream = new FileStream(path, FileMode.Create))
@@ -132,6 +136,15 @@ namespace WriteMe.Areas.Identity.Pages.Account
             }
 
             return uniqueFileName;
+        }
+
+
+        private void CheckImageFormat(IFormFile file)
+        {
+            if (!file.ContentType.Contains("image/"))
+            {
+                ModelState.AddModelError(string.Empty, "Incorrect image format");
+            }
         }
     }
 }

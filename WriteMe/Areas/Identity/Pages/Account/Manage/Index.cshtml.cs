@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -72,6 +73,7 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            CheckImageFormat(Input.ProfilePicture);
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
@@ -92,7 +94,7 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
             if (Input.ProfilePicture != null)
             {
                 user.ProfilePicture = ChangedPhoto(Input.ProfilePicture, user.ProfilePicture);
-                await _userManager.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
             }
 
 
@@ -112,12 +114,26 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
                 System.IO.File.Delete(path);
             }
 
+            string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
+
+            path = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "images",
+                uniqueFileName);
+
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 file.CopyTo(stream);
             }
 
-            return previousProfilePicture;
+            return uniqueFileName;
+        }
+
+        private void CheckImageFormat(IFormFile file)
+        {
+            if (!file.ContentType.Contains("image/"))
+            {
+                ModelState.AddModelError(string.Empty, "Incorrect image format");
+            }
         }
     }
 }
