@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using WriteMe.Data.Entities;
+using WriteMe.Data.Repository;
+using WriteMe.Data.Repository.Interface;
 using WriteMe.Services;
 using WriteMe.SignalR;
 
@@ -35,6 +37,7 @@ namespace WriteMe
             });
 
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+            services.AddScoped<IRepository, Repository>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

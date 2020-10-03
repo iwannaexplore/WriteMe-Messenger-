@@ -53,7 +53,7 @@
     <script>
         function showMessages(to) {
             var url = '@Url.Action("DisplayMessages", "Home")';
-            $('#messagesSection').load(url, {to: to });
+            $('#messagesSection').load(url, {friendId: to });
         };
     </script>
     <script src="~/js/Chat.js"></script>
