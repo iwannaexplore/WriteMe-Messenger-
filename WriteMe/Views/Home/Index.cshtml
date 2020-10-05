@@ -1,7 +1,7 @@
 ﻿@inject UserManager<User> UserManager
 @using Microsoft.AspNetCore.Identity
 @using WriteMe.Data.Entities
-@model WriteMe.Controllers.Blabla
+@model List<User>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -24,7 +24,7 @@
                 <input class="search-input" placeholder="Search for people..." type="search">
             </div>
             <div class="users-content">
-                @foreach (var user in Model.Users)
+                @foreach (var user in Model)
                 {
                     <div class="user-element" onclick="showMessages(@user.Id)">
                         <div class="row no-gutters">

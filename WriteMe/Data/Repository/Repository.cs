@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using WriteMe.Data.Entities;
@@ -31,12 +32,12 @@ namespace WriteMe.Data.Repository
             return CurrentUserEmail;
         }
 
-        public List<User> GetCurrentUserFriends()
+        public async Task<List<User>> GetCurrentUserFriendsAsync()
         {
-            var friendList = _context.FriendLists.Include(fl => fl.FriendListUsers)
+            var friendList = await _context.FriendLists.Include(fl => fl.FriendListUsers)
                 .Where(fl =>
                     fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId))
-                .ToList();
+                .ToListAsync();
 
             List<User> users = new List<User>();
             foreach (var list in friendList)
@@ -48,44 +49,46 @@ namespace WriteMe.Data.Repository
             return users;
         }
 
-        public Chat GetChatOfTwoUsers(int firstUserId, int secondUserId)
+        public async Task<Chat> GetChatOfTwoUsersAsync(int firstUserId, int secondUserId)
         {
-            return _context.Chats.Include(c => c.FriendList).ThenInclude(fl => fl.FriendListUsers)
+            return await _context.Chats.Include(c => c.FriendList).ThenInclude(fl => fl.FriendListUsers)
                 .Include(c => c.Messages)
-                .FirstOrDefault(c =>
+                .FirstOrDefaultAsync(c =>
                     c.FriendList.FriendListUsers.Any(flu => flu.UserId == firstUserId) &&
                     c.FriendList.FriendListUsers.Any(flu => flu.UserId == secondUserId));
         }
 
-        public List<Message> GetMessagesForChatWithSelectedFriend(int friendId)
+        public async Task<List<Message>> GetMessagesForChatWithSelectedFriendAsync(int friendId)
         {
-            return _context.Messages.Include(m => m.RelatedUser)
-                .Where(m => m.ChatId == GetChatOfTwoUsers(CurrentUserId, friendId).ChatId)
-                .ToList();
+            var chat = await GetChatOfTwoUsersAsync(CurrentUserId, friendId);
+            return await _context.Messages.Include(m => m.RelatedUser)
+                .Where(m => m.ChatId == chat.ChatId)
+                .ToListAsync();
         }
 
-        public User GetUserById(int userId)
+        public async Task<User> GetUserByIdAsync(int userId)
         {
-            return _context.Users.First(u => u.Id == userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         public User GetUserByEmail(string userEmail)
         {
-            return _context.Users.First(u => u.Email == userEmail);
+            return _context.Users.FirstOrDefault(u => u.Email == userEmail);
         }
 
-        public string GetFriendRelationshipString(int friendId)
+        public async Task<string> GetFriendRelationshipStringAsync(int friendId)
         {
-            return _context.FriendLists.Include(flr => flr.FriendsRelationship)
-                .Include(flr => flr.FriendListUsers).First(fl =>
+            var friendList = await _context.FriendLists.Include(flr => flr.FriendsRelationship)
+                .Include(flr => flr.FriendListUsers).FirstOrDefaultAsync(fl =>
                     fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId) &&
-                    fl.FriendListUsers.Any(flu => flu.UserId == friendId)).FriendsRelationship.Name;
+                    fl.FriendListUsers.Any(flu => flu.UserId == friendId));
+            return friendList.FriendsRelationship.Name;
         }
 
-        public void ChangeRelationshipBetweenUserAndFriend(int friendId)
+        public async Task ChangeRelationshipBetweenUserAndFriendAsync(int friendId)
         {
-            var friendList = _context.FriendLists.Include(flr => flr.FriendsRelationship)
-                .Include(flr => flr.FriendListUsers).First(fl =>
+            var friendList = await _context.FriendLists.Include(flr => flr.FriendsRelationship)
+                .Include(flr => flr.FriendListUsers).FirstOrDefaultAsync(fl =>
                     fl.FriendListUsers.Any(flu => flu.UserId == CurrentUserId) &&
                     fl.FriendListUsers.Any(flu => flu.UserId == friendId));
 
@@ -93,19 +96,22 @@ namespace WriteMe.Data.Repository
             _context.SaveChanges();
         }
 
-        public void AddNewMessage(string fromUserEmail, string toUserEmail, string message)
+        public async Task AddNewMessageAsync(string fromUserEmail, string toUserEmail, string message)
         {
-            Chat currentChat = GetChatOfTwoUsers(GetUserByEmail(fromUserEmail).Id, GetUserByEmail(toUserEmail).Id);
+            var fromUser =  GetUserByEmail(fromUserEmail);
+            var toUser =  GetUserByEmail(toUserEmail);
 
-            _context.Messages.Add(new Message()
+            Chat currentChat = await GetChatOfTwoUsersAsync(fromUser.Id, toUser.Id);
+
+            await _context.Messages.AddAsync(new Message()
             {
                 ChatId = currentChat.ChatId,
-                RelatedUserId = GetUserByEmail(fromUserEmail).Id,
-                RelatingUserId = GetUserByEmail(toUserEmail).Id,
+                RelatedUserId = fromUser.Id,
+                RelatingUserId = toUser.Id,
                 SendingTime = DateTime.Now,
                 Text = message
             });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

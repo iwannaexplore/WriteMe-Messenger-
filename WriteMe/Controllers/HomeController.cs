@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using WriteMe.Data.Entities;
 using WriteMe.Data.Repository.Interface;
+using WriteMe.Data.ViewModels;
 using WriteMe.Models;
 
 namespace WriteMe.Controllers
@@ -20,18 +20,21 @@ namespace WriteMe.Controllers
             _repository = repository;
         }
         
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(new Blabla() {Users = _repository.GetCurrentUserFriends() });
+            return View(await _repository.GetCurrentUserFriendsAsync());
         }
 
-        public IActionResult DisplayMessages(int friendId)
+        public async Task<IActionResult> DisplayMessages(int friendId)
         {
+            var messages = await _repository.GetMessagesForChatWithSelectedFriendAsync(friendId);
+            var friend = await _repository.GetUserByIdAsync(friendId);
+            var friendRelationship = await _repository.GetFriendRelationshipStringAsync(friendId);
             return PartialView("_ChatRoom",
-                new HelpMeGod()
+                new ChatRoomViewModel()
                 {
-                    Messages = _repository.GetMessagesForChatWithSelectedFriend(friendId), Friend = _repository.GetUserById(friendId),
-                    FriendRelationship = _repository.GetFriendRelationshipString(friendId)
+                    Messages = messages, Friend = friend,
+                    FriendRelationship = friendRelationship
                 });
         }
 
@@ -42,23 +45,11 @@ namespace WriteMe.Controllers
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
 
-        public IActionResult ChangeUserRelationship(int friendId)
+        public async Task<IActionResult> ChangeUserRelationship(int friendId)
         {
-            _repository.ChangeRelationshipBetweenUserAndFriend(friendId);
+            await _repository.ChangeRelationshipBetweenUserAndFriendAsync(friendId);
             return RedirectToAction("DisplayMessages", new { friendId = friendId});
         }
     }
 
-    public class Blabla
-    {
-        public List<User> Users { get; set; }
-    }
-
-    public class HelpMeGod
-    {
-        public List<Message> Messages { get; set; }
-        public User Friend { get; set; }
-
-        public string FriendRelationship { get; set; }
-    }
 }

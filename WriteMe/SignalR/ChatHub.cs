@@ -23,7 +23,7 @@ namespace WriteMe.SignalR
 
         public async Task Send(string message, string from, string to)
         {
-            _repository.AddNewMessage(from, to, message);
+            await _repository.AddNewMessageAsync(from, to, message);
 
             await Clients.Users(from, to).SendAsync("Receive", message, CurrentUserEmail);
         }

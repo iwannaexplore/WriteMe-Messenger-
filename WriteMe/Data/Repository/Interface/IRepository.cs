@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WriteMe.Data.Entities;
 
 namespace WriteMe.Data.Repository.Interface
@@ -7,20 +8,20 @@ namespace WriteMe.Data.Repository.Interface
     {
         public string GetCurrentUserEmail();
 
-        public List<User> GetCurrentUserFriends();
+        public Task<List<User>> GetCurrentUserFriendsAsync();
 
-        public Chat GetChatOfTwoUsers(int firstUserId, int secondUserId);
+        public Task<Chat> GetChatOfTwoUsersAsync(int firstUserId, int secondUserId);
 
-        public List<Message> GetMessagesForChatWithSelectedFriend(int friendId);
+        public Task<List<Message>> GetMessagesForChatWithSelectedFriendAsync(int friendId);
 
-        public User GetUserById(int userId);
+        public Task<User> GetUserByIdAsync(int userId);
 
         public User GetUserByEmail(string userEmail);
 
-        public string GetFriendRelationshipString(int friendId);
+        public Task<string> GetFriendRelationshipStringAsync(int friendId);
 
-        public void ChangeRelationshipBetweenUserAndFriend(int friendId);
+        public Task ChangeRelationshipBetweenUserAndFriendAsync(int friendId);
 
-        public void AddNewMessage(string fromUserEmail, string toUserEmail, string message);
+        public Task AddNewMessageAsync(string fromUserEmail, string toUserEmail, string message);
     }
 }
