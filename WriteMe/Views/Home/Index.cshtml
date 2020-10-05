@@ -1,7 +1,7 @@
 ﻿@inject UserManager<User> UserManager
 @using Microsoft.AspNetCore.Identity
 @using WriteMe.Data.Entities
-@model WriteMe.Controllers.Blabla
+@model List<User>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -12,18 +12,19 @@
         <section class="col-3 user-section h-100">
             <header class="users-section-header">
                 <div>
-                    <i class="fas fa-cog"></i>
+                    <a  asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fas fa-cog"></i></a>
                 </div>
                 <div class="text-dark user-section-logo">Messenger</div>
                 <div>
-                    <i class="fas fa-envelope-open"></i>
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> <i class="fas fa-envelope-open"></i></a>
+                   
                 </div>
             </header>
             <div class="search-form p-3">
                 <input class="search-input" placeholder="Search for people..." type="search">
             </div>
             <div class="users-content">
-                @foreach (var user in Model.Users)
+                @foreach (var user in Model)
                 {
                     <div class="user-element" onclick="showMessages(@user.Id)">
                         <div class="row no-gutters">
@@ -52,7 +53,7 @@
     <script>
         function showMessages(to) {
             var url = '@Url.Action("DisplayMessages", "Home")';
-            $('#messagesSection').load(url, {to: to });
+            $('#messagesSection').load(url, {friendId: to });
         };
     </script>
     <script src="~/js/Chat.js"></script>

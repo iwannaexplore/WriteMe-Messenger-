@@ -12,9 +12,8 @@ a.navbar-brand {
 }
 
 /* Provide sufficient contrast against white background */
-a {
-    color: #0366d6;
-}
+
+a { color: #0366d6; }
 
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -31,27 +30,18 @@ a {
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
-    font-size: 14px;
-}
+
+html { font-size: 14px; }
 
 @media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+    html { font-size: 16px; }
 }
 
-.border-top {
-    border-top: 1px solid #e5e5e5;
-}
+.border-top { border-top: 1px solid #e5e5e5; }
 
-.border-bottom {
-    border-bottom: 1px solid #e5e5e5;
-}
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
 
-.box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 
 button.accept-policy {
     font-size: 1rem;
@@ -62,6 +52,7 @@ button.accept-policy {
 -------------------------------------------------- */
 
 /*font-family: 'Open Sans', sans-serif;*/
+
 /*font-family: 'Raleway', sans-serif;*/
 
 body {
@@ -72,6 +63,7 @@ body {
 }
 
 /*Users Section*/
+
 .users-section-header {
     align-items: center;
     border-bottom: 1px solid #e4e4e4;
@@ -90,9 +82,7 @@ body {
     font-size: 18px;
 }
 
-.user-section {
-    border-right: 1px #e4e4e4 solid;
-}
+.user-section { border-right: 1px #e4e4e4 solid; }
 
 .search-form {
     border-bottom: 1px #e4e4e4 solid;
@@ -111,10 +101,10 @@ body {
     width: 100%;
 }
 
-    .search-input:focus {
-        background-color: #f6f7f9;
-        outline: none !important;
-    }
+.search-input:focus {
+    background-color: #f6f7f9;
+    outline: none !important;
+}
 
 .users-content {
     height: 541px;
@@ -122,9 +112,7 @@ body {
     padding-top: 10px;
 }
 
-    .users-content::-webkit-scrollbar {
-        display: none;
-    }
+.users-content::-webkit-scrollbar { display: none; }
 
 .user-element {
     padding: 5px 0 5px 10px;
@@ -137,33 +125,70 @@ body {
     background-color: #dedede;
 }
 
-    .user-image-holder {
-        border-radius: 50%;
-        display: flex;
-        height: 70px;
-        justify-content: center;
-        overflow: hidden;
-        text-align: center;
-        width: 70px;
-    }
-
-    .user-image-holder img {
-        height: 100%;
-        width: 100%;
-    }
-
-.user-element-content {
-    position: relative;
+.user-image-holder {
+    border-radius: 50%;
+    display: flex;
+    height: 70px;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    width: 70px;
 }
 
-    .user-element-content::after {
-        background-color: #e4e4e4;
-        bottom: -5%;
-        content: "";
-        height: 1px;
-        position: absolute;
-        width: 100%;
-    }
+.back-link {
+    border: 1px #dc3545 solid;
+    color: #dc3545;
+    transition: background-color 0.1s linear;
+    transition: color 0.1s linear;
+}
+.back-link:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.user-image-holder-big {
+    border-radius: 50%;
+    display: flex;
+    height: 150px;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    width: 150px;
+}
+
+.user-image-holder img {
+    display: block;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.user-image-holder-big {
+    border-radius: 50%;
+    display: flex;
+    height: 150px;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    width: 150px;
+}
+.user-image-holder-big img {
+    display: block;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.user-element-content { position: relative; }
+
+.user-element-content::after {
+    background-color: #e4e4e4;
+    bottom: -8%;
+    content: "";
+    height: 1px;
+    position: absolute;
+    width: 100%;
+}
 
 .user-name {
     font-family: Raleway, sans-serif;
@@ -200,6 +225,7 @@ body {
 
 
 /*Dialog Header*/
+
 .dialog-header {
     border-bottom: 1px #e4e4e4 solid;
     display: flex;
@@ -222,12 +248,10 @@ body {
 /*End Dialog Header*/
 
 /*Dialog Content*/
-.dialog-content {
-    height: 600px;
-}
+
+.dialog-content { height: 604px; }
 
 .messages-footer {
-    background-color: orangered;
     border-right: 1px #e4e4e4 solid;
     bottom: 0;
     display: flex;
@@ -243,9 +267,7 @@ body {
     width: 100%;
 }
 
-    .message-input:focus {
-        outline: none;
-    }
+.message-input:focus { outline: none; }
 
 
 .dialog-messages {
@@ -259,9 +281,7 @@ body {
     padding: 10px;
 }
 
-    .dialog-messages::-webkit-scrollbar {
-        display: none;
-    }
+.dialog-messages::-webkit-scrollbar { display: none; }
 
 .messages {
     word-wrap: break-word;
@@ -291,8 +311,7 @@ body {
     text-align: end;
 }
 
-.message {
-}
+.message { }
 
 
 
@@ -300,9 +319,8 @@ body {
 
 
 /*Start User Info*/
-.user-info {
-    position: relative;
-}
+
+.user-info { position: relative; }
 
 .user-name-info {
     font-family: Raleway, sans-serif;
@@ -317,9 +335,7 @@ body {
     padding-top: 2px;
 }
 
-.user-info-header {
-    padding: 10px 10px 0 10px;
-}
+.user-info-header { padding: 10px 10px 0 10px; }
 
 .user-info-content {
     border-bottom: 1px solid #e4e4e4;

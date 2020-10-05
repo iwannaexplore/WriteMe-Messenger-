@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,17 +25,17 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
-        [TempData]
-        public string StatusMessage { get; set; }
+        [TempData] public string StatusMessage { get; set; }
 
-        [BindProperty]
-        public InputModel Input { get; set; }
+        [BindProperty] public InputModel Input { get; set; }
 
         public class InputModel
         {
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Profile Picture")] public IFormFile ProfilePicture { get; set; }
         }
 
         private async Task LoadAsync(User user)
@@ -44,6 +44,8 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+
+            ViewData["ProfilePicture"] = user.ProfilePicture;
 
             Input = new InputModel
             {
@@ -71,6 +73,7 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            CheckImageFormat(Input.ProfilePicture);
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
@@ -88,9 +91,49 @@ namespace WriteMe.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            if (Input.ProfilePicture != null)
+            {
+                user.ProfilePicture = ChangedPhoto(Input.ProfilePicture, user.ProfilePicture);
+                var result = await _userManager.UpdateAsync(user);
+            }
+
+
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
+        }
+
+        private string ChangedPhoto(IFormFile file, string previousProfilePicture)
+        {
+            var path = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "images",
+                previousProfilePicture);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+
+            string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
+
+            path = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "images",
+                uniqueFileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            return uniqueFileName;
+        }
+
+        private void CheckImageFormat(IFormFile file)
+        {
+            if (!file.ContentType.Contains("image/"))
+            {
+                ModelState.AddModelError(string.Empty, "Incorrect image format");
+            }
         }
     }
 }
