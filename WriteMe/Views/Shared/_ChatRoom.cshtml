@@ -5,26 +5,54 @@
     <div id="user-status" class="status-header"></div>
 </header>
 <div class="row no-gutters dialog-content">
-    <section class="col-8">
+    <section class="col-8 h-100">
         <div class="dialog-messages" id="chat">
             @foreach (var message in Model.Messages)
             {
                 if (message.RelatedUser.Email == Model.Friend.Email)
                 {
-                    <div class='messages'>
-                        <div class='companion-message'>@message.Text</div>
-                    </div>
+                    if (message.IsImage)
+                    {
+                        <div class='messages'>
+                            <a href="/messageImages/@message.Text" target="_blank">
+                                <img src="/messageImages/@message.Text" class="companion-image-message">
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class='messages'>
+                            <div class='companion-message'>@message.Text</div>
+                        </div>
+                    }
                 }
                 else
                 {
-                    <div class='messages my-message'>
-                        <div class='my-message-text'>@message.Text</div>
-                    </div>
+                    if (message.IsImage)
+                    {
+                        <div class='messages my-message'>
+                            <a href="/messageImages/@message.Text" target="_blank">
+                                <img src="/messageImages/@message.Text" class="my-image-message">
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class='messages my-message'>
+                            <div class='my-message-text'>@message.Text</div>
+                        </div>
+                    }
                 }
             }
         </div>
         <footer class="messages-footer">
+            <input id="myfile" name="files" type="file" size="1" style="display: none"/>
             <input class="message-input" id="message" placeholder="Type a message" type="text">
+            <div class="attachment-container" id="attachment-container">
+                <a onclick="$('#myfile').click()" class="attachment">
+                    <i class="fas fa-paperclip"></i>
+                </a>
+            </div>
         </footer>
     </section>
     <aside class="col-4 user-info">
@@ -32,7 +60,7 @@
             <div class="row no-gutters">
                 <div class="col-3">
                     <div class="user-image-holder">
-                        <img alt="" src="~/images/@Model.Friend.ProfilePicture">
+                        <img alt="" src="~/profileImages/@Model.Friend.ProfilePicture">
                     </div>
                 </div>
                 <div class="col-9">
@@ -45,30 +73,37 @@
         <section class="user-info-content">
             <input type="checkbox" value="mute" name="mute" id="mute">
             <label class="mb-0" for="mute">Mute Notifications</label>
-            <br />
-            <br />
+            <br/>
+            <br/>
             @if (@Model.FriendRelationship == "Blocked")
             {
-                <a class="btn btn-sm btn-success" onclick="ChangeUserRelationship(@Model.Friend.Id)">Unblock</a>
+                <a class="btn btn-sm btn-success" id="relationshipButton" onclick="ChangeUserRelationship('@Model.Friend.Email')">Unblock</a>
             }
             else
             {
-                <a class="btn btn-sm btn-danger" onclick="ChangeUserRelationship(@Model.Friend.Id)">Block</a>
+                <a class="btn btn-sm btn-danger" id="relationshipButton" onclick="ChangeUserRelationship('@Model.Friend.Email')">Block</a>
             }
         </section>
     </aside>
 </div>
 <script>
-    document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
-</script>
-<script>
     $(document).ready(function() {
-        console.log("ready!");
         hubConnection.invoke("GetOnlineInfo", $("#friend").val());
         setInterval(function() {
                 hubConnection.invoke("GetOnlineInfo", $("#friend").val());
             },
             20 * 1000);
+        setTimeout(() => document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight, 500);
+    });
+
+    CheckUserRelationship();
+
+    function ChangeUserRelationship(to) {
+        var url = '@Url.Action("ChangeUserRelationship", "Home")';
+        $('#messagesSection').load(url, { friendEmail: to });
+    };
+
+    function CheckUserRelationship() {
         if ($("#friendRelationship").val() == "Friend") {
             $("#message").keyup(function(e) {
                 if (e.key === 'Enter') {
@@ -78,14 +113,86 @@
                 }
             });
 
+            AddImageUploading();
+
         } else {
             $("#message").prop("disabled", true);
             $("#message").attr("placeholder", "You can't write this user");
+            $("#attachment-container").css("display", "none");
         }
-    });
+        document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
+    }
 
-    function ChangeUserRelationship(to) {
-        var url = '@Url.Action("ChangeUserRelationship", "Home")';
-        $('#messagesSection').load(url, { friendId: to });
-    };
+    var z = 0, x = 0, y = 0;
+    function ChangeColor(number, color, files) {
+        let timerId = setInterval(() => {
+                var fileId = files;
+                if ($("#downloading-message" + fileId).text() == "") {
+                    clearInterval(timerId);
+                    return;
+                }
+                $("#downloading-message" + fileId).css("background-color", `rgb(${z},${x}, ${y})`);
+                if (z != color) {
+                    z += number;
+                    return;
+                };
+                if (x != color) {
+                    x += number;
+                    return;
+                }
+                if (y != color) {
+                    y += number;
+                    return;
+                }
+                clearInterval(timerId);
+                if (y == 0) {
+                    ChangeColor(number * -1, 200, fileId);
+                    return;
+                } else {
+                    ChangeColor(number * -1, 0, fileId);
+                    return;
+                }
+            },
+            50);
+    }
+
+    function AddImageUploading() {
+        var files = 0;
+        $("#myfile").change(function(e) {
+            let formData = new FormData();
+            formData.append('File', $('#myfile')[0].files[0]); // myFile is the input type="file" control
+
+            let _url = '@Url.Action("UploadFile", "Home")';
+
+            formData.append('FromUserEmail', $("#current").val());
+            formData.append('ToUserEmail', $("#friend").val());
+
+            var userMessage = $(`<div class='my-message-text' id="downloading-message${files}"></div>`);
+            $(userMessage).text("Downloading...");
+            var userBlock = $("<div class='messages my-message'></div>");
+            $(userBlock).append(userMessage);
+            $("#chat").append(userBlock);
+
+            ChangeColor(5, 200, files);
+            files++;
+            document.querySelector("#chat").scrollTop = document.querySelector("#chat").scrollHeight;
+
+            $.ajax({
+                cache: false,
+                url: _url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    $(userBlock).remove();
+                },
+                error: function(passParams) {
+                    $(userBlock).css("color", "red");
+                    $(userBlock).text("Incorrect format... Try again");
+                    setTimeout(() => $(userBlock).remove(), 3000);
+                }
+            });
+        });
+    }
 </script>

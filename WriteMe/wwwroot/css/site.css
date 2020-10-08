@@ -141,6 +141,7 @@ body {
     transition: background-color 0.1s linear;
     transition: color 0.1s linear;
 }
+
 .back-link:hover {
     background-color: #dc3545;
     color: white;
@@ -172,6 +173,7 @@ body {
     text-align: center;
     width: 150px;
 }
+
 .user-image-holder-big img {
     display: block;
     object-fit: cover;
@@ -249,19 +251,19 @@ body {
 
 /*Dialog Content*/
 
-.dialog-content { height: 604px; }
+.dialog-content { height: 92%; }
 
 .messages-footer {
     border-right: 1px #e4e4e4 solid;
     bottom: 0;
     display: flex;
     position: absolute;
+    height: 7%;
     width: 100%;
 }
 
 .message-input {
     border: none;
-    border-top: 1px #e4e4e4 solid;
     font-size: 15px;
     padding: 10px;
     width: 100%;
@@ -272,9 +274,10 @@ body {
 
 .dialog-messages {
     border-right: 1px #e4e4e4 solid;
+    border-bottom: 1px #e4e4e4 solid;
     display: flex;
     flex-direction: column;
-    height: 561px;
+    height: 93%;
     justify-content: end;
     min-height: 0;
     overflow-y: scroll;
@@ -311,12 +314,51 @@ body {
     text-align: end;
 }
 
-.message { }
+.my-image-message {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #0084ff;
+    border-radius: 25px;
+    display: inline-block;
+    margin: 2px 0;
+    padding: 10px;
+}
+
+.companion-image-message {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #f1eef5;
+    border-radius: 25px;
+    display: inline-block;
+    margin: 2px 0;
+    padding: 10px;
+}
+
+.attachment {
+    text-align: center;
+    line-height: 1;
+    font-size: 20px;
+}
+
+.attachment > i { position: relative; }
+
+.attachment-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 8%;
+    border-left: 1px solid #e4e4e4;
+    cursor: pointer;
+}
+
+
 
 
 
 /*End Dialog Content*/
-
 
 /*Start User Info*/
 

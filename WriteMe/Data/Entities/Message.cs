@@ -21,5 +21,9 @@ namespace WriteMe.Data.Entities
         public int RelatedUserId { get; set; }
 
         public User RelatedUser { get; set; }
+
+        public bool IsImage { get; set; }
+
+        public bool IsVideo { get; set; }
     }
 }
