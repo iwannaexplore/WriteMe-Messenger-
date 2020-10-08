@@ -6,22 +6,22 @@ namespace WriteMe.Data.Repository.Interface
 {
     public interface IRepository
     {
-        public string GetCurrentUserEmail();
+        public Task<string> GetCurrentUserEmailAsync();
 
         public Task<List<User>> GetCurrentUserFriendsAsync();
 
-        public Task<Chat> GetChatOfTwoUsersAsync(int firstUserId, int secondUserId);
+        public Task<Chat> GetChatOfTwoUsersAsync(string firstUserEmail, string secondUserEmail);
 
-        public Task<List<Message>> GetMessagesForChatWithSelectedFriendAsync(int friendId);
+        public Task<List<Message>> GetMessagesForChatWithSelectedFriendAsync(string friendEmail);
 
-        public Task<User> GetUserByIdAsync(int userId);
+        public Task<User> GetUserByEmailAsync(string userEmail);
 
-        public User GetUserByEmail(string userEmail);
+        public Task<string> GetFriendRelationshipStringAsync(string friendEmail);
 
-        public Task<string> GetFriendRelationshipStringAsync(int friendId);
-
-        public Task ChangeRelationshipBetweenUserAndFriendAsync(int friendId);
+        public Task ChangeRelationshipBetweenUserAndFriendAsync(string friendEmail);
 
         public Task AddNewMessageAsync(string fromUserEmail, string toUserEmail, string message);
+
+        public Task AddNewMessageWithImageAsync(string fromUserEmail, string toUserEmail, string imagePath);
     }
 }

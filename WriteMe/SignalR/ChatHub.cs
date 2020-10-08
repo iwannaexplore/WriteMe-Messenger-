@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-
 using WriteMe.Data.Repository.Interface;
 
 namespace WriteMe.SignalR
@@ -30,7 +29,7 @@ namespace WriteMe.SignalR
 
         public async Task GetOnlineInfo(string friendEmail)
         {
-            _repository.GetCurrentUserEmail();
+            await _repository.GetCurrentUserEmailAsync();
 
             if (UsersOnline.Contains(friendEmail))
             {

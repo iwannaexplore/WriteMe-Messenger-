@@ -127,7 +127,7 @@ namespace WriteMe.Areas.Identity.Pages.Account
             string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
 
             var path = Path.Combine(
-                Directory.GetCurrentDirectory(), "wwwroot", "images",
+                Directory.GetCurrentDirectory(), "wwwroot", "profileImages",
                 uniqueFileName);
 
             using (var stream = new FileStream(path, FileMode.Create))

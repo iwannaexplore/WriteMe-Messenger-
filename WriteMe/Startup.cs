@@ -34,7 +34,7 @@ namespace WriteMe
             {
                 options.ClientTimeoutInterval = TimeSpan.FromSeconds(60 * 10);
                 options.EnableDetailedErrors = true;
-            });
+            }).AddMessagePackProtocol(); ;
 
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             services.AddScoped<IRepository, Repository>();
