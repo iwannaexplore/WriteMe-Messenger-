@@ -15,8 +15,16 @@
                     {
                         <div class='messages'>
                             <a href="/messageImages/@message.Text" target="_blank">
-                                <img src="/messageImages/@message.Text" class="companion-image-message">
+                                <img src="/messageImages/@message.Text" class="companion-file-message">
                             </a>
+                        </div>
+                    }
+                    else if (message.IsVideo)
+                    {
+                        <div class='messages'>
+                            <video width="320" height="240" class="my-file-message" controls>
+                                <source src="/messageVideos/@message.Text">
+                            </video>
                         </div>
                     }
                     else
@@ -32,8 +40,16 @@
                     {
                         <div class='messages my-message'>
                             <a href="/messageImages/@message.Text" target="_blank">
-                                <img src="/messageImages/@message.Text" class="my-image-message">
+                                <img src="/messageImages/@message.Text" class="my-file-message">
                             </a>
+                        </div>
+                    }
+                    else if (message.IsVideo)
+                    {
+                        <div class='messages my-message'>
+                            <video width="320" height="240" class="my-file-message" controls>
+                                <source src="/messageVideos/@message.Text">
+                            </video>
                         </div>
                     }
                     else
@@ -113,7 +129,7 @@
                 }
             });
 
-            AddImageUploading();
+            AddFileUploading();
 
         } else {
             $("#message").prop("disabled", true);
@@ -156,7 +172,7 @@
             50);
     }
 
-    function AddImageUploading() {
+    function AddFileUploading() {
         var files = 0;
         $("#myfile").change(function(e) {
             let formData = new FormData();
@@ -189,10 +205,13 @@
                 },
                 error: function(passParams) {
                     $(userBlock).css("color", "red");
-                    $(userBlock).text("Incorrect format... Try again");
+                    $(userBlock).text("Incorrect format... Try again " + passParams);
+                    z = passParams;
                     setTimeout(() => $(userBlock).remove(), 3000);
                 }
             });
         });
     }
+
+    var z;
 </script>

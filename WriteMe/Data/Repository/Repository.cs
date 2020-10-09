@@ -116,7 +116,7 @@ namespace WriteMe.Data.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddNewMessageWithImageAsync(string fromUserEmail, string toUserEmail, string imagePath)
+        public async Task AddNewMessageWithFileAsync(string fromUserEmail, string toUserEmail, string filePath, string type)
         {
             var relationship = await GetFriendRelationshipStringAsync(toUserEmail);
             if (relationship == "Block") return;
@@ -126,15 +126,32 @@ namespace WriteMe.Data.Repository
 
             Chat currentChat = await GetChatOfTwoUsersAsync(fromUserEmail, toUserEmail);
 
-            await _context.Messages.AddAsync(new Message()
+            if (type.ToUpper() == "image".ToUpper())
             {
-                ChatId = currentChat.ChatId,
-                RelatedUserId = fromUser.Id,
-                RelatingUserId = toUser.Id,
-                SendingTime = DateTime.Now,
-                Text = imagePath,
-                IsImage = true
-            });
+                await _context.Messages.AddAsync(new Message()
+                {
+                    ChatId = currentChat.ChatId,
+                    RelatedUserId = fromUser.Id,
+                    RelatingUserId = toUser.Id,
+                    SendingTime = DateTime.Now,
+                    Text = filePath,
+                    IsImage = true
+                });
+            }
+
+            if (type.ToUpper() == "video".ToUpper())
+            {
+                await _context.Messages.AddAsync(new Message()
+                {
+                    ChatId = currentChat.ChatId,
+                    RelatedUserId = fromUser.Id,
+                    RelatingUserId = toUser.Id,
+                    SendingTime = DateTime.Now,
+                    Text = filePath,
+                    IsVideo = true
+                });
+            }
+
             await _context.SaveChangesAsync();
         }
     }

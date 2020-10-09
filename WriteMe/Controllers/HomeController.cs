@@ -67,28 +67,48 @@ namespace WriteMe.Controllers
         [HttpPost]
         public async Task UploadFile([FromForm] UploadFileViewModel model)
         {
-            if (!model.File.ContentType.Contains("image/"))
+            if (model.File.ContentType.Contains("image/"))
             {
-                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                string uniqueFileName = Guid.NewGuid() + "_" + model.File.FileName;
+
+                var path = Path.Combine(
+                    Directory.GetCurrentDirectory(), "wwwroot", "messageImages",
+                    uniqueFileName);
+
+                await using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    model.File.CopyTo(stream);
+                }
+
+                await _repository.AddNewMessageWithFileAsync(model.FromUserEmail, model.ToUserEmail, uniqueFileName, "Image");
+                Thread.Sleep(2000);
+                await _hubContext.Clients.Users(model.FromUserEmail, model.ToUserEmail)
+                    .SendAsync("UploadFile", uniqueFileName, await _repository.GetCurrentUserEmailAsync(),
+                        uniqueFileName, "image");
                 return;
             }
 
-
-            string uniqueFileName = Guid.NewGuid() + "_" + model.File.FileName;
-
-            var path = Path.Combine(
-                Directory.GetCurrentDirectory(), "wwwroot", "messageImages",
-                uniqueFileName);
-
-            await using (var stream = new FileStream(path, FileMode.Create))
+            if (model.File.ContentType.Contains("video/"))
             {
-                model.File.CopyTo(stream);
-            }
+                string uniqueFileName = Guid.NewGuid() + "_" + model.File.FileName;
 
-            await _repository.AddNewMessageWithImageAsync(model.FromUserEmail, model.ToUserEmail, uniqueFileName);
-            Thread.Sleep(2000);
-            await _hubContext.Clients.Users(model.FromUserEmail, model.ToUserEmail)
-                .SendAsync("ImageMessage", uniqueFileName, await _repository.GetCurrentUserEmailAsync(), uniqueFileName);
+                var path = Path.Combine(
+                    Directory.GetCurrentDirectory(), "wwwroot", "messageVideos",
+                    uniqueFileName);
+
+                await using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    model.File.CopyTo(stream);
+                }
+
+                await _repository.AddNewMessageWithFileAsync(model.FromUserEmail, model.ToUserEmail, uniqueFileName, "Video");
+                Thread.Sleep(2000);
+                await _hubContext.Clients.Users(model.FromUserEmail, model.ToUserEmail)
+                    .SendAsync("UploadFile", uniqueFileName, await _repository.GetCurrentUserEmailAsync(),
+                        uniqueFileName, "video");
+                return;
+            }
+            Response.StatusCode = (int)HttpStatusCode.BadRequest;
         }
     }
 }

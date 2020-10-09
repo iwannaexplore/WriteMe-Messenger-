@@ -314,7 +314,7 @@ body {
     text-align: end;
 }
 
-.my-image-message {
+.my-file-message {
     display: block;
     width: 100%;
     height: auto;
@@ -325,7 +325,7 @@ body {
     padding: 10px;
 }
 
-.companion-image-message {
+.companion-file-message {
     display: block;
     width: 100%;
     height: auto;

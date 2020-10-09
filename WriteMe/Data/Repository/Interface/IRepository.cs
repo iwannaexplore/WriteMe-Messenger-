@@ -22,6 +22,6 @@ namespace WriteMe.Data.Repository.Interface
 
         public Task AddNewMessageAsync(string fromUserEmail, string toUserEmail, string message);
 
-        public Task AddNewMessageWithImageAsync(string fromUserEmail, string toUserEmail, string imagePath);
+        public Task AddNewMessageWithFileAsync(string fromUserEmail, string toUserEmail, string filePath, string type);
     }
 }
