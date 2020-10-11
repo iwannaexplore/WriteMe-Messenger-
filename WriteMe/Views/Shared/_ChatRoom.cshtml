@@ -76,7 +76,9 @@
             <div class="row no-gutters">
                 <div class="col-3">
                     <div class="user-image-holder">
-                        <img alt="" src="~/profileImages/@Model.Friend.ProfilePicture">
+                        <a href="~/profileImages/@Model.Friend.ProfilePicture" target="_blank">
+                            <img alt="" src="~/profileImages/@Model.Friend.ProfilePicture">
+                        </a>
                     </div>
                 </div>
                 <div class="col-9">
@@ -140,6 +142,7 @@
     }
 
     var z = 0, x = 0, y = 0;
+
     function ChangeColor(number, color, files) {
         let timerId = setInterval(() => {
                 var fileId = files;
